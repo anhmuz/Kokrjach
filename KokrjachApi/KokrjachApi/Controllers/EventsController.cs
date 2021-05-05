@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using KokrjachApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -14,33 +12,7 @@ namespace KokrjachApi.Controllers
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
-        private static List<Event> _events = new List<Event>()
-        {
-            new Event()
-            {
-                UserId = "Vadym",
-                EventTypeId = "Сash withdrawal",
-                Description = "Vadym withdrew cash"
-            },
-            new Event()
-            {
-                UserId = "Anhelina",
-                EventTypeId = "Money transfer",
-                Description = "Anhelina transferred money"
-            },
-            new Event()
-            {
-                UserId = "Wolter",
-                EventTypeId = "Сash withdrawal",
-                Description = "Wolter withdrew cash"
-            },
-            new Event()
-            {
-                UserId = "Kokrjach",
-                EventTypeId = "Money transfer",
-                Description = "Kokrjach transferred money"
-            }
-        };
+        private EventsRepository _eventsRepository = EventsRepository.Instance;
 
         public EventsController(ILogger<EventsController> logger)
         {
@@ -55,23 +27,23 @@ namespace KokrjachApi.Controllers
             bool hasEventTypeIdParam = HttpContext.Request.Query.TryGetValue(nameof(Event.EventTypeId), out eventTypeId);
             if (!hasEventTypeIdParam)
             {
-                return _events;
+                return _eventsRepository.GetEvents();
             }
-            return _events.Where(item => item.EventTypeId == eventTypeId.ToString());
+            return _eventsRepository.GetEventsByTypeId(eventTypeId.ToString());
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Event> GetEvent(int id)
+        public Event GetEvent(int id)
         {
-            return _events[id - 1];
+            return _eventsRepository.GetEvent(id);
         }
 
         [HttpPost]
         public ActionResult<Event> Post(Event eventItem)
         {
-            _events.Add(eventItem);
             Console.WriteLine("Post a new event: {0}", eventItem);
-            return CreatedAtAction(nameof(GetEvent), new { id = _events.Count }, eventItem);
+            int eventId = _eventsRepository.Add(eventItem);
+            return CreatedAtAction(nameof(GetEvent), new { id = eventId }, eventItem);
         }
     }
 }
