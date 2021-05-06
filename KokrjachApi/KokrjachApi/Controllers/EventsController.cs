@@ -45,5 +45,34 @@ namespace KokrjachApi.Controllers
             int eventId = _eventsRepository.Add(eventItem);
             return CreatedAtAction(nameof(GetEvent), new { id = eventId }, eventItem);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] Event eventItem)
+        {
+            Console.WriteLine("Update event with id: {0}", id);
+            try
+            {
+                _eventsRepository.Update(id, eventItem);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return NotFound();
+            }
+            return NoContent();
+        }
+
+        [HttpDelete("{id}")]
+        public ActionResult<Event> Delete(int id)
+        {
+            Console.WriteLine("Delete event with id: {0}", id);
+            try
+            {
+                return _eventsRepository.Delete(id);
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+                return NotFound();
+            }
+        }
     }
 }
