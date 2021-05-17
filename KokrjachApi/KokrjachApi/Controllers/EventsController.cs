@@ -12,7 +12,6 @@ namespace KokrjachApi.Controllers
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
-        private EventsRepository _eventsRepository = EventsRepository.Instance;
 
         public EventsController(ILogger<EventsController> logger)
         {
@@ -27,22 +26,22 @@ namespace KokrjachApi.Controllers
             bool hasEventTypeIdParam = HttpContext.Request.Query.TryGetValue(nameof(Event.EventTypeId), out eventTypeId);
             if (!hasEventTypeIdParam)
             {
-                return _eventsRepository.GetEvents();
+                return EventsRepository.Instance.GetEvents();
             }
-            return _eventsRepository.GetEventsByTypeId(eventTypeId.ToString());
+            return EventsRepository.Instance.GetEventsByTypeId(eventTypeId.ToString());
         }
 
         [HttpGet("{id}")]
         public Event GetEvent(int id)
         {
-            return _eventsRepository.GetEvent(id);
+            return EventsRepository.Instance.GetEvent(id);
         }
 
         [HttpPost]
         public ActionResult<Event> Post(Event eventItem)
         {
             Console.WriteLine("Post a new event: {0}", eventItem);
-            int eventId = _eventsRepository.Add(eventItem);
+            int eventId = EventsRepository.Instance.Add(eventItem);
             return CreatedAtAction(nameof(GetEvent), new { id = eventId }, eventItem);
         }
 
@@ -52,7 +51,7 @@ namespace KokrjachApi.Controllers
             Console.WriteLine("Update event with id: {0}", id);
             try
             {
-                _eventsRepository.Update(id, eventItem);
+                EventsRepository.Instance.Update(id, eventItem);
             }
             catch (ArgumentOutOfRangeException)
             {
@@ -67,7 +66,7 @@ namespace KokrjachApi.Controllers
             Console.WriteLine("Delete event with id: {0}", id);
             try
             {
-                return _eventsRepository.Delete(id);
+                return EventsRepository.Instance.Delete(id);
             }
             catch (ArgumentOutOfRangeException)
             {
