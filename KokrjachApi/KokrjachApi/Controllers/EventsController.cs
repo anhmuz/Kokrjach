@@ -32,9 +32,17 @@ namespace KokrjachApi.Controllers
         }
 
         [HttpGet("{id}")]
-        public Event GetEvent(int id)
+        public ActionResult<Event> GetEvent(int id)
         {
-            return EventsRepository.Instance.GetEvent(id);
+            Console.WriteLine("Get event with id: {0}", id);
+            try
+            {
+                return EventsRepository.Instance.GetEvent(id);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
         }
 
         [HttpPost]
@@ -53,7 +61,7 @@ namespace KokrjachApi.Controllers
             {
                 EventsRepository.Instance.Update(id, eventItem);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
@@ -68,7 +76,7 @@ namespace KokrjachApi.Controllers
             {
                 return EventsRepository.Instance.Delete(id);
             }
-            catch (ArgumentOutOfRangeException)
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }

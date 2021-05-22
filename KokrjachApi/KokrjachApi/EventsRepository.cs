@@ -9,7 +9,8 @@ namespace KokrjachApi
 {
     class EventsRepository
     {
-        private List<Event> _events = new List<Event>();
+        private Dictionary<int,Event> _events = new Dictionary<int, Event>();
+        private int _eventId = 1;
 
         private EventsRepository()
         {
@@ -19,34 +20,41 @@ namespace KokrjachApi
 
         public IEnumerable<Event> GetEvents()
         {
-            return _events;
+            return _events.Values;
         }
 
         public IEnumerable<Event> GetEventsByTypeId(string eventTypeId)
         {
-            return _events.Where(item => item.EventTypeId == eventTypeId);
+            return _events.Where(item => item.Value.EventTypeId == eventTypeId).
+                ToDictionary(x => x.Key, x => x.Value).Values;
         }
 
         public Event GetEvent(int id)
         {
-            return _events[id - 1];
+            return _events[id];
         }
 
         public int Add(Event eventItem)
         {
-            _events.Add(eventItem);
-            return _events.Count;
+            int currentId = _eventId;
+            _events.Add(currentId, eventItem);
+            ++_eventId;
+            return currentId;
         }
 
         public void Update(int id, Event eventItem)
         {
-            _events[id - 1] = eventItem;
+            if (!_events.ContainsKey(id))
+            {
+                throw new KeyNotFoundException();
+            }
+            _events[id] = eventItem;
         }
 
         public Event Delete(int id)
         {
-            var removedEvent = _events[id - 1];
-            _events.RemoveAt(id - 1);
+            var removedEvent = _events[id];
+            _events.Remove(id);
             return removedEvent;
         }
     }
