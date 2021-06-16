@@ -20,7 +20,6 @@
     "KokrjachApi": {
       "commandName": "Project",
       "launchBrowser": true,
-      "launchUrl": "api/events",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

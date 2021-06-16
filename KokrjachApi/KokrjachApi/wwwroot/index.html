@@ -1,0 +1,33 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <link rel="shortcut icon" href="#">
+    <meta charset="utf-8" />
+    <title>Event CRUD</title>
+</head>
+<body>
+    <h1>Event CRUD</h1>
+    <form action="javascript:void(0);" method="POST" onsubmit="post()">
+        <input type="text" id="add-userId" placeholder="User ID">
+        <input type="text" id="add-eventTypeId" placeholder="Event type ID">
+        <input type="text" id="add-description" placeholder="Description">
+        <input type="submit" value="Add">
+    </form>
+
+    <br/>
+
+    <table border="1">
+        <tr>
+            <th>User Id</th>
+            <th>Event Type Id</th>
+            <th>Description</th>
+        </tr>
+        <tbody id="events"></tbody>
+    </table>
+
+    <script src="js/site.js" asp-append-version="true"></script>
+    <script type="text/javascript">
+        getEvents();
+    </script>
+</body>
+</html>
