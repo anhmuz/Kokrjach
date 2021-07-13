@@ -49,8 +49,15 @@ namespace KokrjachApi.Controllers
         public ActionResult<Event> Post(Event eventItem)
         {
             Console.WriteLine("Post a new event: {0}", eventItem);
-            int eventId = EventsRepository.Instance.Add(eventItem);
-            return CreatedAtAction(nameof(GetEvent), new { id = eventId }, eventItem);
+            try
+            {
+                EventsRepository.Instance.Add(eventItem);
+            }
+            catch (ArgumentException)
+            {
+                return NoContent();
+            }
+            return CreatedAtAction(nameof(GetEvent), new { id = eventItem.Id }, eventItem);
         }
 
         [HttpPut("{id}")]
