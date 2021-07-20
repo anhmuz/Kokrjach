@@ -22,12 +22,6 @@ namespace KokrjachApi
             return _events.Values;
         }
 
-        public IEnumerable<Event> GetEventsByTypeId(string eventTypeId)
-        {
-            return _events.Where(item => item.Value.EventTypeId == eventTypeId).
-                ToDictionary(x => x.Key, x => x.Value).Values;
-        }
-
         public Event GetEvent(int id)
         {
             return _events[id];
@@ -39,13 +33,13 @@ namespace KokrjachApi
             return;
         }
 
-        public void Update(int id, Event eventItem)
+        public void Update(int id, EventUpdate eventItem)
         {
             if (!_events.ContainsKey(id))
             {
                 throw new KeyNotFoundException();
             }
-            _events[id] = eventItem;
+            _events[id].Description = eventItem.Description;
         }
 
         public Event Delete(int id)

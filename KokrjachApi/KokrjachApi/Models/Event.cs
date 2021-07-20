@@ -6,8 +6,10 @@ namespace KokrjachApi.Models
     {
         [ReadOnly(true)]
         public string UserId { get; set; }
+
+        [ReadOnly(true)]
         public int Id { get; set; }
-        public string EventTypeId { get; set; }
+
         public string Description { get; set; }
     }
 }

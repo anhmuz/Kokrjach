@@ -22,13 +22,7 @@ namespace KokrjachApi.Controllers
         public IEnumerable<Event> GetEvents()
         {
             Console.WriteLine("Get a list of events");
-            StringValues eventTypeId;
-            bool hasEventTypeIdParam = HttpContext.Request.Query.TryGetValue(nameof(Event.EventTypeId), out eventTypeId);
-            if (!hasEventTypeIdParam)
-            {
-                return EventsRepository.Instance.GetEvents();
-            }
-            return EventsRepository.Instance.GetEventsByTypeId(eventTypeId.ToString());
+            return EventsRepository.Instance.GetEvents();
         }
 
         [HttpGet("{id}")]
@@ -61,7 +55,7 @@ namespace KokrjachApi.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Event eventItem)
+        public IActionResult Put(int id, [FromBody] EventUpdate eventItem)
         {
             Console.WriteLine("Update event with id: {0}", id);
             try
