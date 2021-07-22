@@ -28,7 +28,7 @@ function post() {
         body: JSON.stringify(event)        
     })
         .then(response => {
-            alert(response.headers.get("Location"));
+            alertStatus(response);
             return response.json();
         })
         .then(() => {
@@ -38,6 +38,14 @@ function post() {
             addDescriptionTextbox.value = '';
         })
         .catch(error => console.error('Unable to add event.', error));
+}
+
+function alertStatus(response) {
+    if (response.ok) {
+        alert('Status: ' + response.status + '\n' + 'Location: ' + response.headers.get('Location'));
+    } else {
+        alert('Status: ' + response.status);
+    }
 }
 
 function displayEditForm(id) {
