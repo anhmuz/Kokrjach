@@ -29,7 +29,7 @@ function post() {
     })
         .then(response => {
             alert(response.headers.get("Location"));
-            response.json();
+            return response.json();
         })
         .then(() => {
             getEvents();
