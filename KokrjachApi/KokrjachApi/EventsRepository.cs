@@ -30,7 +30,6 @@ namespace KokrjachApi
         public void Add(Event eventItem)
         {
             _events.Add(eventItem.Id, eventItem);
-            return;
         }
 
         public void Update(int id, EventUpdate eventItem)

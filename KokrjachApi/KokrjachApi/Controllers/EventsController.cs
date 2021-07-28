@@ -49,7 +49,7 @@ namespace KokrjachApi.Controllers
             }
             catch (ArgumentException)
             {
-                return NoContent();
+                return BadRequest(new { Message = "already exists" });
             }
             return CreatedAtAction(nameof(GetEvent), new { id = eventItem.Id }, eventItem);
         }
