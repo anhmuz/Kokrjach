@@ -10,6 +10,7 @@ namespace KokrjachApi
     class EventsRepository
     {
         private Dictionary<int,Event> _events = new Dictionary<int, Event>();
+        private int _eventId = 1;
 
         private EventsRepository()
         {
@@ -27,9 +28,13 @@ namespace KokrjachApi
             return _events[id];
         }
 
-        public void Add(Event eventItem)
+        public int Add(Event eventItem)
         {
-            _events.Add(eventItem.Id, eventItem);
+            int currentId = _eventId;
+            eventItem.Id = currentId;
+            _events.Add(currentId, eventItem);
+            ++_eventId;
+            return currentId;
         }
 
         public void Update(int id, EventUpdate eventItem)

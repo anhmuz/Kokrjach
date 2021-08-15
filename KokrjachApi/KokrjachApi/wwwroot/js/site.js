@@ -9,12 +9,10 @@ function getEvents() {
 }
 
 function post() {
-    const addIdTextbox = document.getElementById('add-id');
     const addUserIdTextbox = document.getElementById('add-userId');
     const addDescriptionTextbox = document.getElementById('add-description');
 
     const event = {
-        id: parseInt(addIdTextbox.value.trim(), 10),
         userId: addUserIdTextbox.value.trim(),
         description: addDescriptionTextbox.value.trim()
     };
@@ -29,7 +27,6 @@ function post() {
     })
         .then(response => {
             getEvents();
-            addIdTextbox.value = '';
             addUserIdTextbox.value = '';
             addDescriptionTextbox.value = '';
 
