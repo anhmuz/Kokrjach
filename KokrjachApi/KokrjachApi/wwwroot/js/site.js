@@ -41,6 +41,14 @@ function post() {
         .catch(error => console.error('Unable to add event.', error));
 }
 
+function deleteEvent(id) {
+    fetch(`${uri}/${id}`, {
+        method: 'DELETE'
+    })
+        .then(() => getEvents())
+        .catch(error => console.error('Unable to delete event.', error));
+}
+
 function displayEditForm(id) {
     const item = events.find(item => item.id === id);
 
@@ -86,6 +94,10 @@ function _displayEvents(data) {
         editButton.innerText = 'Edit';
         editButton.setAttribute('onclick', `displayEditForm(${event.id})`);
 
+        let deleteButton = button.cloneNode(false);
+        deleteButton.innerText = 'Delete';
+        deleteButton.setAttribute('onclick', `deleteEvent(${event.id})`);
+
         let tr = tBody.insertRow();
 
         let td1 = tr.insertCell(0);
@@ -102,6 +114,9 @@ function _displayEvents(data) {
 
         let td4 = tr.insertCell(3);
         td4.appendChild(editButton);
+
+        let td5 = tr.insertCell(4);
+        td5.appendChild(deleteButton);
     });
 
     events = data;
