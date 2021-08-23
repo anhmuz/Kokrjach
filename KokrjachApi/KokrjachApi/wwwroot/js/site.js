@@ -1,55 +1,63 @@
 ﻿const uri = 'api/events';
 let events = [];
 
-function getEvents() {
-    fetch(uri)
-        .then(response => response.json())
-        .then(data => _displayEvents(data))
-        .catch(error => console.error('Unable to get events.', error));
+async function getEvents() {
+    try {
+        let response = await fetch(uri);
+        let data = await response.json();
+        _displayEvents(data);
+    } catch (error) {
+        console.error('Unable to get events.', error);
+    }
 }
 
-function post() {
-    const addUserIdTextbox = document.getElementById('add-userId');
-    const addDescriptionTextbox = document.getElementById('add-description');
+async function onAddEvent() {
+    try {
+        const addUserIdTextbox = document.getElementById('add-userId');
+        const addDescriptionTextbox = document.getElementById('add-description');
 
-    const event = {
-        userId: addUserIdTextbox.value.trim(),
-        description: addDescriptionTextbox.value.trim()
-    };
+        const event = {
+            userId: addUserIdTextbox.value.trim(),
+            description: addDescriptionTextbox.value.trim()
+        };
 
-    fetch(uri, {
-        method: 'POST',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(event)        
-    })
-        .then(response => {
-            getEvents();
-            addUserIdTextbox.value = '';
-            addDescriptionTextbox.value = '';
+        let response = await fetch(uri, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(event)
+        });
 
-            if (response.ok) {
-                alert('Status: ' + response.status + '\n' + 'Location: ' + response.headers.get('Location'));
-            } else {
-                response.json().then(data => {
-                    alert('Status: ' + response.status + ': ' + data.message);
-                });
-            }
-        })
-        .catch(error => console.error('Unable to add event.', error));
+        if (response.ok) {
+            alert('Status: ' + response.status + '\n' + 'Location: ' + response.headers.get('Location'));
+        } else {
+            let data = await response.json();
+            alert('Status: ' + response.status + ': ' + data.message);
+        }
+
+        await getEvents();
+        addUserIdTextbox.value = '';
+        addDescriptionTextbox.value = '';
+    } catch (error) {
+        console.error('Unable to add event.', error);
+    }
 }
 
-function deleteEvent(id) {
-    fetch(`${uri}/${id}`, {
-        method: 'DELETE'
-    })
-        .then(() => getEvents())
-        .catch(error => console.error('Unable to delete event.', error));
+async function onDeleteEvent(id) {
+    try {
+        await fetch(`${uri}/${id}`, {
+            method: 'DELETE'
+        });
+
+        await getEvents();
+    } catch (error) {
+        console.error('Unable to delete event.', error);
+    }
 }
 
-function displayEditForm(id) {
+function onDisplayEditForm(id) {
     const item = events.find(item => item.id === id);
 
     document.getElementById('edit-id').value = item.id;
@@ -57,22 +65,26 @@ function displayEditForm(id) {
     document.getElementById('editForm').style.display = 'block';
 }
 
-function put() {
-    const eventId = parseInt(document.getElementById('edit-id').value, 10);
-    const eventUpdate = {
-        description: document.getElementById('edit-description').value.trim()
-    };
+async function onEditEvent() {
+    try {
+        const eventId = parseInt(document.getElementById('edit-id').value, 10);
+        const eventUpdate = {
+            description: document.getElementById('edit-description').value.trim()
+        };
 
-    fetch(`${uri}/${eventId}`, {
-        method: 'PUT',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(eventUpdate)
-    })
-        .then(() => getEvents())
-        .catch(error => console.error('Unable to update item.', error));
+        await fetch(`${uri}/${eventId}`, {
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(eventUpdate)
+        });
+
+        await getEvents();
+    } catch (error) {
+        console.error('Unable to update item.', error);
+    }
 
     closeInput();
 
@@ -92,11 +104,11 @@ function _displayEvents(data) {
     data.forEach(event => {
         let editButton = button.cloneNode(false);
         editButton.innerText = 'Edit';
-        editButton.setAttribute('onclick', `displayEditForm(${event.id})`);
+        editButton.setAttribute('onclick', `onDisplayEditForm(${event.id})`);
 
         let deleteButton = button.cloneNode(false);
         deleteButton.innerText = 'Delete';
-        deleteButton.setAttribute('onclick', `deleteEvent(${event.id})`);
+        deleteButton.setAttribute('onclick', `onDeleteEvent(${event.id})`);
 
         let tr = tBody.insertRow();
 

@@ -8,7 +8,7 @@
 </head>
 <body>
     <h1>Event CRUD</h1>
-    <form action="javascript:void(0);" method="POST" onsubmit="post()">
+    <form action="javascript:void(0);" method="POST" onsubmit="onAddEvent()">
         <input type="text" id="add-userId" placeholder="User ID">
         <input type="text" id="add-description" placeholder="Description">
         <input type="submit" value="Add">
@@ -18,7 +18,7 @@
 
     <div id="editForm">
         <h3>Edit</h3>
-        <form action="javascript:void(0);" onsubmit="put()">
+        <form action="javascript:void(0);" onsubmit="onEditEvent()">
             <input type="hidden" id="edit-id">
             <input type="text" id="edit-description">
             <input type="submit" value="Save">
