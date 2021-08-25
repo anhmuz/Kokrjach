@@ -2,13 +2,9 @@
 let events = [];
 
 async function getEvents() {
-    try {
-        let response = await fetch(uri);
-        let data = await response.json();
-        _displayEvents(data);
-    } catch (error) {
-        console.error('Unable to get events.', error);
-    }
+    let response = await fetch(uri);
+    let data = await response.json();
+    _displayEvents(data);
 }
 
 async function onAddEvent() {
