@@ -2,9 +2,14 @@
 let events = [];
 
 async function getEvents() {
+    //await sleep(3000);
     let response = await fetch(uri);
     let data = await response.json();
     _displayEvents(data);
+}
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function onAddEvent() {
