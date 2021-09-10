@@ -1,3 +1,7 @@
 /KokrjachApi/.vs/
 /KokrjachApi/KokrjachApi/obj/
 /KokrjachApi/KokrjachApi/bin/
+/KokrjachApi/Events/obj/
+/KokrjachApi/Events/bin/
+*.csproj.user
+*.Development.json
