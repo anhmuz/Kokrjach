@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+option csharp_namespace = "EventsClient";
+
+package events;
+
+import "google/protobuf/empty.proto";
+
+service EventsCRUD {
+  rpc GetEvents (google.protobuf.Empty) returns (GetEventsResponse);
+}
+
+message GetEventsResponse {
+  repeated EventItem events = 1;
+}
+
+message EventItem {
+  string userId = 1;
+  int32 id = 2;
+  string description = 3;
+}
+
+

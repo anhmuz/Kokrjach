@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Grpc.Net.Client;
 using KokrjachApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Primitives;
+using EventsClient;
+using Google.Protobuf.WellKnownTypes;
 
 namespace KokrjachApi.Controllers
 {
@@ -22,7 +24,22 @@ namespace KokrjachApi.Controllers
         public IEnumerable<Event> GetEvents()
         {
             Console.WriteLine("Get a list of events");
-            return EventsRepository.Instance.GetEvents();
+            using var channel = GrpcChannel.ForAddress("https://localhost:5002");
+            var client = new EventsCRUD.EventsCRUDClient(channel);
+            var response = client.GetEvents(new Empty());
+            var result = new List<Event>();
+            foreach (var eventItem in response.Events)
+            {
+                Console.WriteLine(string.Format("UserId: {0}, Id: {1}, Description: {2}",
+                    eventItem.UserId, eventItem.Id, eventItem.Description));
+                var item = new Event {
+                    UserId = eventItem.UserId,
+                    Id = eventItem.Id,
+                    Description = eventItem.Description
+                };
+                result.Add(item);
+            }
+            return result;
         }
 
         [HttpGet("{id}")]

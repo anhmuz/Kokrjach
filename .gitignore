@@ -5,3 +5,5 @@
 /KokrjachApi/Events/bin/
 *.csproj.user
 *.Development.json
+/KokrjachApi/EventsClient/bin/
+/KokrjachApi/EventsClient/obj/

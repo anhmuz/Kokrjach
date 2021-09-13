@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30128.74
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KokrjachApi", "KokrjachApi\KokrjachApi.csproj", "{5BAD17DF-BD66-4F91-8932-7AEADCE42615}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Events", "Events\Events.csproj", "{5F0064A7-7CC9-4D0E-AF15-0983177BAD50}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Events", "Events\Events.csproj", "{5F0064A7-7CC9-4D0E-AF15-0983177BAD50}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EventsClient", "EventsClient\EventsClient.csproj", "{B8C76B0D-C7C5-40C7-B1FA-A573A4C47D3B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{5F0064A7-7CC9-4D0E-AF15-0983177BAD50}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5F0064A7-7CC9-4D0E-AF15-0983177BAD50}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5F0064A7-7CC9-4D0E-AF15-0983177BAD50}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8C76B0D-C7C5-40C7-B1FA-A573A4C47D3B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8C76B0D-C7C5-40C7-B1FA-A573A4C47D3B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8C76B0D-C7C5-40C7-B1FA-A573A4C47D3B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8C76B0D-C7C5-40C7-B1FA-A573A4C47D3B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
