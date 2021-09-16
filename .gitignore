@@ -7,3 +7,5 @@
 *.Development.json
 /KokrjachApi/EventsClient/bin/
 /KokrjachApi/EventsClient/obj/
+/KokrjachApi/bin/
+/KokrjachApi/obj/

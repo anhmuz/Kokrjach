@@ -1,0 +1,18 @@
+version: '3.4'
+
+services:
+  kokrjachapi:
+    image: ${DOCKER_REGISTRY-}kokrjachapi
+    build:
+      context: .
+      dockerfile: KokrjachApi/Dockerfile
+    ports:
+      - "5001:443"
+
+  events:
+    image: ${DOCKER_REGISTRY-}events
+    build:
+      context: .
+      dockerfile: Events/Dockerfile
+    ports:
+      - "5000:80"

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using EventsClient;
 using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 
 namespace KokrjachApi.Controllers
 {
@@ -24,7 +25,9 @@ namespace KokrjachApi.Controllers
         public IEnumerable<Event> GetEvents()
         {
             Console.WriteLine("Get a list of events");
-            using var channel = GrpcChannel.ForAddress("https://localhost:5002");
+            AppContext.SetSwitch(
+                "System.Net.Http.SocketsHttpHandler.Http2UnencryptedSupport", true);
+            using var channel = GrpcChannel.ForAddress("http://events:80");
             var client = new EventsCRUD.EventsCRUDClient(channel);
             var response = client.GetEvents(new Empty());
             var result = new List<Event>();
