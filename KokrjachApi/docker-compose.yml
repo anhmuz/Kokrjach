@@ -6,6 +6,11 @@ services:
     build:
       context: .
       dockerfile: KokrjachApi/Dockerfile
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/events.pfx
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
     ports:
       - "5001:443"
 
@@ -14,5 +19,11 @@ services:
     build:
       context: .
       dockerfile: Events/Dockerfile
+    environment:
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=12345
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/events.pfx
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/https:ro
     ports:
-      - "5000:80"
+      - "5002:443"
+      - "8080:80"
