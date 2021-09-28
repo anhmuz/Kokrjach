@@ -27,3 +27,17 @@ services:
     ports:
       - "5002:443"
       - "8080:80"
+
+  database:
+    image: "mysql/mysql-server:latest"
+    container_name: database
+    environment:
+      MYSQL_DATABASE: "kokrjach_events"
+      MYSQL_USER: "root"
+      MYSQL_ROOT_PASSWORD: "root"
+      MYSQL_ROOT_HOST: "%"
+    volumes:
+      - ./sql:/docker-entrypoint-initdb.d
+      - ./datadir:/var/lib/mysql
+    ports:
+      - "3306:3306"
