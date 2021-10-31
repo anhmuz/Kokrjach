@@ -8,5 +8,3 @@ create table event_item (
     event_description varchar(255),
     primary key (id)
 );
-
-GRANT SELECT (user_id), INSERT (user_id) ON event_item TO ''@'%';
