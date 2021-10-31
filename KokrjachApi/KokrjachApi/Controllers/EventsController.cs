@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using EventsClient;
 using Google.Protobuf.WellKnownTypes;
 using System.Net.Http;
+using System.Linq;
 
 namespace KokrjachApi.Controllers
 {
@@ -15,35 +16,36 @@ namespace KokrjachApi.Controllers
     public class EventsController : ControllerBase
     {
         private readonly ILogger<EventsController> _logger;
+        private readonly GrpcChannel _channel;
+
+        private Event FromEventItem(EventItem eventItem)
+        {
+            return new Event
+            {
+                UserId = eventItem.UserId,
+                Id = eventItem.Id,
+                Description = eventItem.Description
+            };
+        }
 
         public EventsController(ILogger<EventsController> logger)
         {
             _logger = logger;
+            var httpHandler = new HttpClientHandler();
+            // Return `true` to allow certificates that are untrusted/invalid
+            httpHandler.ServerCertificateCustomValidationCallback =
+                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
+            _channel = GrpcChannel.ForAddress("https://events:443", new GrpcChannelOptions { HttpHandler = httpHandler });
         }
 
         [HttpGet]
         public IEnumerable<Event> GetEvents()
         {
             Console.WriteLine("Get a list of events");
-            var httpHandler = new HttpClientHandler();
-            // Return `true` to allow certificates that are untrusted/invalid
-            httpHandler.ServerCertificateCustomValidationCallback =
-                HttpClientHandler.DangerousAcceptAnyServerCertificateValidator;
-            using var channel = GrpcChannel.ForAddress("https://events:443", new GrpcChannelOptions { HttpHandler = httpHandler });
-            var client = new EventsCRUD.EventsCRUDClient(channel);
-            var response = client.GetEvents(new Empty());
+            var client = new EventsCRUD.EventsCRUDClient(_channel);
+            GetEventsResponse response = client.GetEvents(new Empty());
             var result = new List<Event>();
-            foreach (var eventItem in response.Events)
-            {
-                Console.WriteLine(string.Format("UserId: {0}, Id: {1}, Description: {2}",
-                    eventItem.UserId, eventItem.Id, eventItem.Description));
-                var item = new Event {
-                    UserId = eventItem.UserId,
-                    Id = eventItem.Id,
-                    Description = eventItem.Description
-                };
-                result.Add(item);
-            }
+            response.EventItems.ToList().ForEach(eventItem => result.Add(FromEventItem(eventItem)));
             return result;
         }
 
@@ -51,41 +53,53 @@ namespace KokrjachApi.Controllers
         public ActionResult<Event> GetEvent(int id)
         {
             Console.WriteLine("Get event with id: {0}", id);
-            try
+            var client = new EventsCRUD.EventsCRUDClient(_channel);
+            var request = new GetEventRequest()
             {
-                return EventsRepository.Instance.GetEvent(id);
-            }
-            catch (KeyNotFoundException)
+                EventItemId = id
+            };
+            GetEventResponse response = client.GetEvent(request);
+            if (response.EventItem == null)
             {
                 return NotFound();
             }
+            return FromEventItem(response.EventItem);
         }
 
         [HttpPost]
-        public ActionResult<Event> Post(Event eventItem)
+        public ActionResult<Event> Post(Event eventAdd)
         {
-            Console.WriteLine("Post a new event: {0}", eventItem);
-            int eventId;
-            try
+            Console.WriteLine("Post a new event: {0}", eventAdd);
+            var client = new EventsCRUD.EventsCRUDClient(_channel);
+            var eventItem = new EventItem()
             {
-                eventId = EventsRepository.Instance.Add(eventItem);
-            }
-            catch (ArgumentException)
+                UserId = eventAdd.UserId,
+                Description = eventAdd.Description
+            };
+            var request = new AddRequest()
             {
-                return BadRequest(new { Message = "already exists" });
-            }
-            return CreatedAtAction(nameof(GetEvent), new { id = eventId }, eventItem);
+                EventItem = eventItem
+            };
+            AddResponse response = client.Add(request);
+            return CreatedAtAction(nameof(GetEvent), new { id = response.EventItemId }, eventAdd);
         }
 
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] EventUpdate eventItem)
+        public IActionResult Put(int id, [FromBody] EventUpdate eventUpdate)
         {
             Console.WriteLine("Update event with id: {0}", id);
-            try
+            var client = new EventsCRUD.EventsCRUDClient(_channel);
+            var eventItem = new EventItem()
             {
-                EventsRepository.Instance.Update(id, eventItem);
-            }
-            catch (KeyNotFoundException)
+                Id = id,
+                Description = eventUpdate.Description
+            };
+            var request = new UpdateRequest()
+            {
+                EventItem = eventItem
+            };
+            UpdateResponse response = client.Update(request);
+            if (response.EventItem == null)
             {
                 return NotFound();
             }

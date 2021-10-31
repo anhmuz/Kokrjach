@@ -8,10 +8,9 @@ import "google/protobuf/empty.proto";
 
 service EventsCRUD {
   rpc GetEvents (google.protobuf.Empty) returns (GetEventsResponse);
-}
-
-message GetEventsResponse {
-  repeated EventItem events = 1;
+  rpc GetEvent (GetEventRequest) returns (GetEventResponse);
+  rpc Add (AddRequest) returns (AddResponse);
+  rpc Update (UpdateRequest) returns (UpdateResponse);
 }
 
 message EventItem {
@@ -20,4 +19,30 @@ message EventItem {
   string description = 3;
 }
 
+message GetEventsResponse {
+  repeated EventItem eventItems = 1;
+}
 
+message GetEventRequest {
+  int32 eventItemId = 1;
+}
+
+message GetEventResponse {
+  EventItem eventItem = 1;
+}
+
+message AddRequest {
+  EventItem eventItem = 1;
+}
+
+message AddResponse {
+  int32 eventItemId = 1;
+}
+
+message UpdateRequest {
+  EventItem eventItem = 1;
+}
+
+message UpdateResponse {
+  EventItem eventItem = 1;
+}
