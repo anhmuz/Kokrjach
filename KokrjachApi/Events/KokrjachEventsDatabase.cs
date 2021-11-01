@@ -96,5 +96,15 @@ where id=@id;";
             }
             return rowsAffected;
         }
+        
+        public void Delete(int id)
+        {
+            string sql = @"delete from event_item where id=@id;";
+            using (MySqlCommand command = new MySqlCommand(sql, _connection))
+            {
+                command.Parameters.Add(new MySqlParameter("@id", id));
+                command.ExecuteNonQuery();
+            }
+        }
     }
 }

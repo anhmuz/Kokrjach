@@ -113,5 +113,24 @@ namespace Events
                 return Task.FromResult(response);
             }
         }
+        public override Task<DeleteResponse> Delete(DeleteRequest request, ServerCallContext context)
+        {
+            using (MySqlConnection connection = new MySqlConnection(_builder.ToString()))
+            {
+                connection.Open();
+                var db = new KokrjachEventsDatabase(connection);
+                KokrjachEventsDatabase.Event databaseEvent = db.GetEvent(request.EventItemId);
+                if (databaseEvent == null)
+                {
+                    return Task.FromResult(new DeleteResponse());
+                }
+                db.Delete(request.EventItemId);
+                var response = new DeleteResponse()
+                {
+                    EventItem = FromDatabaseEvent(databaseEvent)
+                };
+                return Task.FromResult(response);
+            }
+        }
     }
 }

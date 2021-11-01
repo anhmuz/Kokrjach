@@ -110,14 +110,17 @@ namespace KokrjachApi.Controllers
         public ActionResult<Event> Delete(int id)
         {
             Console.WriteLine("Delete event with id: {0}", id);
-            try
+            var client = new EventsCRUD.EventsCRUDClient(_channel);
+            var request = new DeleteRequest()
             {
-                return EventsRepository.Instance.Delete(id);
-            }
-            catch (KeyNotFoundException)
+                EventItemId = id
+            };
+            DeleteResponse response = client.Delete(request);
+            if (response.EventItem == null)
             {
                 return NotFound();
             }
+            return FromEventItem(response.EventItem);
         }
     }
 }

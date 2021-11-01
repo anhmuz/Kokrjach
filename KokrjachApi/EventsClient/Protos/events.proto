@@ -11,6 +11,7 @@ service EventsCRUD {
   rpc GetEvent (GetEventRequest) returns (GetEventResponse);
   rpc Add (AddRequest) returns (AddResponse);
   rpc Update (UpdateRequest) returns (UpdateResponse);
+  rpc Delete (DeleteRequest) returns (DeleteResponse);
 }
 
 message EventItem {
@@ -44,5 +45,13 @@ message UpdateRequest {
 }
 
 message UpdateResponse {
+  EventItem eventItem = 1;
+}
+
+message DeleteRequest {
+  int32 eventItemId = 1;
+}
+
+message DeleteResponse {
   EventItem eventItem = 1;
 }
