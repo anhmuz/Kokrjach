@@ -4,7 +4,7 @@ using Grpc.Net.Client;
 using KokrjachApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using EventsClient;
+using Protos;
 using Google.Protobuf.WellKnownTypes;
 using System.Net.Http;
 using System.Linq;

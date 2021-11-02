@@ -6,6 +6,7 @@ using Google.Protobuf.Collections;
 using MySql.Data.MySqlClient;
 using System.Collections.Generic;
 using System.Linq;
+using Protos;
 
 namespace Events
 {

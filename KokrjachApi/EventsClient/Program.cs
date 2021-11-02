@@ -1,6 +1,7 @@
 ﻿using System;
 using Grpc.Net.Client;
 using Google.Protobuf.WellKnownTypes;
+using Protos;
 
 namespace EventsClient
 {
