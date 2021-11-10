@@ -96,11 +96,11 @@ namespace Events
             {
                 connection.Open();
                 var db = new KokrjachEventsDatabase(connection);
-                var databaseEventUpdate = new KokrjachEventsDatabase.EventUpdate()
+                var update = new KokrjachEventsDatabase.EventUpdate()
                 {
                     Description = request.EventItemUpdate.Description
                 };
-                updatedRows = db.Update(request.Id, databaseEventUpdate);
+                updatedRows = db.Update(request.Id, update);
                 if (updatedRows == 0)
                 {
                     string errorMessage = "Bad ID";
