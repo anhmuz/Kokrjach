@@ -89,31 +89,27 @@ namespace Events
             }
         }
 
-        public override Task<UpdateResponse> Update(UpdateRequest request, ServerCallContext context)
+        public override Task<Empty> Update(UpdateRequest request, ServerCallContext context)
         {
             int updatedRows;
             using (MySqlConnection connection = new MySqlConnection(_builder.ToString()))
             {
                 connection.Open();
                 var db = new KokrjachEventsDatabase(connection);
-                var databaseEvent = new KokrjachEventsDatabase.Event()
+                var databaseEventUpdate = new KokrjachEventsDatabase.EventUpdate()
                 {
-                    Id = request.EventItem.Id,
-                    Description = request.EventItem.Description
+                    Description = request.EventItemUpdate.Description
                 };
-                updatedRows = db.Update(databaseEvent);
+                updatedRows = db.Update(request.Id, databaseEventUpdate);
                 if (updatedRows == 0)
                 {
-                    return Task.FromResult(new UpdateResponse());
+                    string errorMessage = "Bad ID";
+                    throw new RpcException(new Status(StatusCode.NotFound, errorMessage));
                 }
-                EventItem eventItem = FromDatabaseEvent(db.GetEvent(request.EventItem.Id));
-                var response = new UpdateResponse()
-                {
-                    EventItem = eventItem
-                };
-                return Task.FromResult(response);
+                return Task.FromResult(new Empty());
             }
         }
+
         public override Task<DeleteResponse> Delete(DeleteRequest request, ServerCallContext context)
         {
             using (MySqlConnection connection = new MySqlConnection(_builder.ToString()))
