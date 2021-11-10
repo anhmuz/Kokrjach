@@ -8,6 +8,7 @@ using Protos;
 using Google.Protobuf.WellKnownTypes;
 using System.Net.Http;
 using System.Linq;
+using Grpc.Core;
 
 namespace KokrjachApi.Controllers
 {
@@ -89,19 +90,25 @@ namespace KokrjachApi.Controllers
         {
             Console.WriteLine("Update event with id: {0}", id);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
-            var eventItem = new EventItem()
+            var eventItemUpdate = new EventItemUpdate()
             {
-                Id = id,
                 Description = eventUpdate.Description
             };
             var request = new UpdateRequest()
             {
-                EventItem = eventItem
+                Id = id,
+                EventItemUpdate = eventItemUpdate
             };
-            UpdateResponse response = client.Update(request);
-            if (response.EventItem == null)
+            try
             {
-                return NotFound();
+                client.Update(request);
+            }
+            catch (RpcException e)
+            {
+                if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
+                {
+                    return NotFound();
+                }
             }
             return NoContent();
         }

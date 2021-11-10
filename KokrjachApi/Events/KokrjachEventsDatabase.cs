@@ -17,6 +17,11 @@ namespace Events
             }
         }
 
+        public class EventUpdate
+        {
+            public string Description { get; set; }
+        }
+
         public KokrjachEventsDatabase(MySqlConnection sqlConnection)
         {
             _connection = sqlConnection;
@@ -82,7 +87,7 @@ values (@userId, @description);";
             return id;
         }
 
-        public int Update(Event databaseEvent)
+        public int Update(int id, EventUpdate databaseEventUpdate)
         {
             string sql = @"update event_item
 set event_description=@description
@@ -90,8 +95,8 @@ where id=@id;";
             int rowsAffected;
             using (MySqlCommand command = new MySqlCommand(sql, _connection))
             {
-                command.Parameters.Add(new MySqlParameter("@description", databaseEvent.Description));
-                command.Parameters.Add(new MySqlParameter("@id", databaseEvent.Id));
+                command.Parameters.Add(new MySqlParameter("@description", databaseEventUpdate.Description));
+                command.Parameters.Add(new MySqlParameter("@id", id));
                 rowsAffected  = command.ExecuteNonQuery();
             }
             return rowsAffected;
