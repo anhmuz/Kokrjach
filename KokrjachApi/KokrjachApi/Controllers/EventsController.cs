@@ -42,7 +42,7 @@ namespace KokrjachApi.Controllers
         [HttpGet]
         public IEnumerable<Event> GetEvents()
         {
-            Console.WriteLine("Get a list of events");
+            _logger.LogInformation("Get a list of events");
             var client = new EventsCRUD.EventsCRUDClient(_channel);
             GetEventsResponse response = client.GetEvents(new Empty());
             var result = new List<Event>();
@@ -53,7 +53,7 @@ namespace KokrjachApi.Controllers
         [HttpGet("{id}")]
         public ActionResult<Event> GetEvent(int id)
         {
-            Console.WriteLine("Get event with id: {0}", id);
+            _logger.LogInformation("Get event with id: {0}", id);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
             var request = new GetEventRequest()
             {
@@ -70,7 +70,7 @@ namespace KokrjachApi.Controllers
         [HttpPost]
         public ActionResult<Event> Post(Event eventAdd)
         {
-            Console.WriteLine("Post a new event: {0}", eventAdd);
+            _logger.LogInformation("Post a new event: {0}", eventAdd);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
             var eventItem = new EventItem()
             {
@@ -88,7 +88,7 @@ namespace KokrjachApi.Controllers
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] EventUpdate eventUpdate)
         {
-            Console.WriteLine("Update event with id: {0}", id);
+            _logger.LogInformation("Update event with id: {0}", id);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
             var eventItemUpdate = new EventItemUpdate()
             {
@@ -116,7 +116,7 @@ namespace KokrjachApi.Controllers
         [HttpDelete("{id}")]
         public ActionResult<Event> Delete(int id)
         {
-            Console.WriteLine("Delete event with id: {0}", id);
+            _logger.LogInformation("Delete event with id: {0}", id);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
             var request = new DeleteRequest()
             {
