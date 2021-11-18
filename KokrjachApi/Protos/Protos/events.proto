@@ -11,7 +11,7 @@ service EventsCRUD {
   rpc GetEvent (GetEventRequest) returns (GetEventResponse);
   rpc Add (AddRequest) returns (AddResponse);
   rpc Update (UpdateRequest) returns (google.protobuf.Empty);
-  rpc Delete (DeleteRequest) returns (DeleteResponse);
+  rpc Delete (DeleteRequest) returns (google.protobuf.Empty);
 }
 
 message EventItem {
@@ -51,8 +51,4 @@ message UpdateRequest {
 
 message DeleteRequest {
   int32 eventItemId = 1;
-}
-
-message DeleteResponse {
-  EventItem eventItem = 1;
 }
