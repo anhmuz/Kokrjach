@@ -102,14 +102,16 @@ where id=@id;";
             return rowsAffected;
         }
         
-        public void Delete(int id)
+        public int Delete(int id)
         {
             string sql = @"delete from event_item where id=@id;";
+            int rowsAffected;
             using (MySqlCommand command = new MySqlCommand(sql, _connection))
             {
                 command.Parameters.Add(new MySqlParameter("@id", id));
-                command.ExecuteNonQuery();
+                rowsAffected = command.ExecuteNonQuery();
             }
+            return rowsAffected;
         }
     }
 }

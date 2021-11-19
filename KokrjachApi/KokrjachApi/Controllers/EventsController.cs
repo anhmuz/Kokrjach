@@ -114,7 +114,7 @@ namespace KokrjachApi.Controllers
         }
 
         [HttpDelete("{id}")]
-        public ActionResult<Event> Delete(int id)
+        public IActionResult Delete(int id)
         {
             _logger.LogInformation("Delete event with id: {0}", id);
             var client = new EventsCRUD.EventsCRUDClient(_channel);
@@ -122,12 +122,15 @@ namespace KokrjachApi.Controllers
             {
                 EventItemId = id
             };
-            DeleteResponse response = client.Delete(request);
-            if (response.EventItem == null)
+            try
+            {
+                client.Delete(request);
+            }
+            catch (RpcException e) when (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
             {
                 return NotFound();
             }
-            return FromEventItem(response.EventItem);
+            return NoContent();
         }
     }
 }

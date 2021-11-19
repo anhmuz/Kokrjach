@@ -101,22 +101,17 @@ namespace Events
             return Task.FromResult(new Empty());
         }
 
-        public override Task<DeleteResponse> Delete(DeleteRequest request, ServerCallContext context)
+        public override Task<Empty> Delete(DeleteRequest request, ServerCallContext context)
         {
             using MySqlConnection connection = GetMySqlConnection();
             connection.Open();
             var db = new KokrjachEventsDatabase(connection);
-            KokrjachEventsDatabase.Event databaseEvent = db.GetEvent(request.EventItemId);
-            if (databaseEvent == null)
+            int deletedRows = db.Delete(request.EventItemId);
+            if (deletedRows == 0)
             {
-                return Task.FromResult(new DeleteResponse());
+                throw new RpcException(new Status(StatusCode.NotFound, "Bad ID"));
             }
-            db.Delete(request.EventItemId);
-            var response = new DeleteResponse()
-            {
-                EventItem = FromDatabaseEvent(databaseEvent)
-            };
-            return Task.FromResult(response);
+            return Task.FromResult(new Empty());
         }
     }
 }
