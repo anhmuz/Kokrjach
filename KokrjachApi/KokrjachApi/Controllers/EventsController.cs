@@ -126,12 +126,9 @@ namespace KokrjachApi.Controllers
             {
                 client.Delete(request);
             }
-            catch (RpcException e)
+            catch (RpcException e) when (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
             {
-                if (e.Status.StatusCode == Grpc.Core.StatusCode.NotFound)
-                {
-                    return NotFound();
-                }
+                return NotFound();
             }
             return NoContent();
         }

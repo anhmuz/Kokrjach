@@ -109,8 +109,7 @@ namespace Events
             int deletedRows = db.Delete(request.EventItemId);
             if (deletedRows == 0)
             {
-                string errorMessage = "Bad ID";
-                throw new RpcException(new Status(StatusCode.NotFound, errorMessage));
+                throw new RpcException(new Status(StatusCode.NotFound, "Bad ID"));
             }
             return Task.FromResult(new Empty());
         }
